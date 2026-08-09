@@ -24,7 +24,7 @@ require('lazy').setup({
   { 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate',
     config = function()
       require('nvim-treesitter').setup({
-        ensure_installed = { 'c', 'cpp' },
+        ensure_installed = { 'c', 'cpp', 'php', 'javascript', 'typescript', 'html', 'css', 'twig' },
         highlight = { enable = true },
       })
     end },
@@ -43,7 +43,7 @@ require('lazy').setup({
     dependencies = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim' },
     config = function()
       require('mason-lspconfig').setup({
-        ensure_installed = { 'clangd' },
+        ensure_installed = { 'clangd', 'intelephense', 'ts_ls', 'html' },
         automatic_enable = true,
       })
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -55,6 +55,20 @@ require('lazy').setup({
           vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
           vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
           vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+        end,
+      })
+      vim.api.nvim_create_autocmd('BufEnter', {
+        pattern = { '*.php', '*.php3', '*.php4', '*.php5', '*.phtml' },
+        callback = function()
+          vim.b.autoformat = false
+        end,
+      })
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        pattern = { '*.c', '*.h', '*.cpp', '*.hpp', '*.cc', '*.cxx' },
+        callback = function()
+          if #vim.lsp.get_clients({ bufnr = 0 }) > 0 then
+            vim.lsp.buf.format({ async = false })
+          end
         end,
       })
     end },
@@ -74,6 +88,10 @@ require('lazy').setup({
             require('luasnip').lsp_expand(args.body)
           end,
         },
+        mapping = cmp.mapping.preset.insert({
+          ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+          ['<CR>'] = cmp.mapping.confirm({ select = false }),
+        }),
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
@@ -99,4 +117,16 @@ require('lazy').setup({
         require('lazygit').lazygit()
       end, { desc = 'open lazygit' })
     end },
+
+  { 'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('nvim-tree').setup({
+        update_focused_file = { enable = true },
+        view = { width = 35 },
+      })
+      vim.keymap.set('n', '<leader>e', '<Cmd>NvimTreeToggle<CR>', { desc = 'toggle file explorer' })
+    end },
+
+  { 'MTDL9/vim-log-highlighting' },
 }, {})
