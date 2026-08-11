@@ -11,6 +11,13 @@ return {
     'williamboman/mason-lspconfig.nvim',
     dependencies = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim' },
     config = function()
+      vim.diagnostic.config({
+        virtual_lines = { current = true },
+        virtual_text = { prefix = '●' },
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+      })
       require('mason-lspconfig').setup({
         ensure_installed = { 'clangd', 'intelephense', 'ts_ls', 'html' },
         automatic_enable = true,

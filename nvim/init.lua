@@ -12,6 +12,8 @@ vim.opt.swapfile = false
 vim.opt.clipboard = 'unnamedplus'
 
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Close buffer' })
+vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
+vim.keymap.set('n', '<S-l>', '<cmd>bnext<cr>', { desc = 'Next buffer' })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { 'c', 'php' },
