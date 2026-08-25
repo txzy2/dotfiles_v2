@@ -19,7 +19,7 @@ return {
         update_in_insert = false,
       })
       require('mason-lspconfig').setup({
-        ensure_installed = { 'clangd', 'intelephense', 'ts_ls', 'html' },
+        ensure_installed = { 'clangd', 'intelephense', 'ts_ls', 'html', 'twiggy_language_server' },
         automatic_enable = true,
       })
 
@@ -32,7 +32,10 @@ return {
             end
             if #result.items == 1 then
               local item = result.items[1]
-              vim.fn.cursor(item.lnum, item.col)
+              local b = item.bufnr or vim.fn.bufadd(item.filename)
+              vim.bo[b].buflisted = true
+              vim.api.nvim_win_set_buf(0, b)
+              vim.api.nvim_win_set_cursor(0, { item.lnum, item.col - 1 })
               return
             end
             vim.fn.setloclist(0, result.items, 'r')
@@ -59,6 +62,13 @@ return {
           vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
           vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
           vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+
+          vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+
+          vim.keymap.set('n', '<leader>ih', function()
+            local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf })
+            vim.lsp.inlay_hint.enable(not enabled, { bufnr = args.buf })
+          end, opts)
         end,
       })
 

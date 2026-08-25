@@ -1,3 +1,7 @@
+if status is-interactive
+    neofetch
+end
+
 function fish_prompt
     set -l last_status $status
 
@@ -57,10 +61,22 @@ set fish_color_selection white --bold --background=brblack
 alias cls="clear"
 alias m="make"
 
-alias server=""
+alias dc="docker compose"
+alias d="docker"
 
 set -x PATH /opt/nvim-linux-x86_64/bin $PATH
 
 # bun
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
+
+# Go paths
+set -x GOPATH $HOME/go
+set -x GOBIN $GOPATH/bin
+
+# Add Go to PATH
+set -x PATH /usr/local/go/bin $PATH
+set -x PATH $GOBIN $PATH
+
+# Optional: Use Go modules by default
+set -x GO111MODULE on

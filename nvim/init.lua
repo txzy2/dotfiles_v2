@@ -7,9 +7,12 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.signcolumn = 'yes'
+vim.opt.colorcolumn = '120'
 vim.opt.termguicolors = true
 vim.opt.swapfile = false
 vim.opt.clipboard = 'unnamedplus'
+
+vim.filetype.add({ extension = { twig = 'twig', html = 'html' } })
 
 vim.keymap.set('n', '<leader>bd', '<cmd>bdelete<cr>', { desc = 'Close buffer' })
 vim.keymap.set('n', '<S-h>', '<cmd>bprevious<cr>', { desc = 'Prev buffer' })
